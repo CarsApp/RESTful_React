@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/CarsApp/RESTful_React/pkg/models"
-	"github.com/CarsApp/RESTful_React/pkg/repository"
+	"github.com/TodoApp2021/RESTful_React/pkg/models"
+	"github.com/TodoApp2021/RESTful_React/pkg/repository"
 )
 
 type Authorization interface {

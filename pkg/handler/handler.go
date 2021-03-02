@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/CarsApp/RESTful_React/pkg/service"
+	"github.com/TodoApp2021/RESTful_React/pkg/service"
 	"github.com/gin-gonic/gin"
 )
 

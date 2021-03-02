@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/CarsApp/RESTful_React/pkg/handler"
-	"github.com/CarsApp/RESTful_React/pkg/repository"
-	"github.com/CarsApp/RESTful_React/pkg/server"
-	"github.com/CarsApp/RESTful_React/pkg/service"
+	"github.com/TodoApp2021/RESTful_React/pkg/handler"
+	"github.com/TodoApp2021/RESTful_React/pkg/repository"
+	"github.com/TodoApp2021/RESTful_React/pkg/server"
+	"github.com/TodoApp2021/RESTful_React/pkg/service"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )

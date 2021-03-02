@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/CarsApp/RESTful_React/pkg/models"
+	"github.com/TodoApp2021/RESTful_React/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

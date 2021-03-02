@@ -1,4 +1,4 @@
-module github.com/CarsApp/RESTful_React
+module github.com/TodoApp2021/RESTful_React
 
 go 1.16
 
@@ -7,6 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/jackc/pgx/v4 v4.10.1
 	github.com/jackc/tern v1.12.4
+	github.com/segmentio/kafka-go v0.4.10
 	github.com/sirupsen/logrus v1.8.0
 	github.com/spf13/viper v1.7.1
 )

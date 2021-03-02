@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/CarsApp/RESTful_React/pkg/models"
-	"github.com/CarsApp/RESTful_React/pkg/repository"
+	"github.com/TodoApp2021/RESTful_React/pkg/models"
+	"github.com/TodoApp2021/RESTful_React/pkg/repository"
 	"github.com/dgrijalva/jwt-go"
 )
 
