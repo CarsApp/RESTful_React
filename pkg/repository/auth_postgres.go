@@ -22,18 +22,18 @@ func (ap *AuthPostgres) CreateUser(user models.User) (int, error) {
 
 	conn, err := ap.pool.Acquire(context.Background())
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 	defer conn.Release()
 
 	tx, err := conn.Begin(context.Background())
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	row := tx.QueryRow(context.Background(), query, user.Name, user.Username, user.Password)
 	if err := row.Scan(&id); err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	return id, tx.Commit(context.Background())

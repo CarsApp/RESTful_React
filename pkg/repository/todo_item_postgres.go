@@ -20,7 +20,7 @@ func NewTodoItemPostgres(pool *pgxpool.Pool) *TodoItemPostgres {
 func (t *TodoItemPostgres) Create(listId int, item models.TodoItem) (int, error) {
 	conn, err := t.pool.Acquire(context.Background())
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 	defer conn.Release()
 	tx, err := conn.Begin(context.Background())
@@ -35,7 +35,7 @@ func (t *TodoItemPostgres) Create(listId int, item models.TodoItem) (int, error)
 	err = row.Scan(&itemId)
 	if err != nil {
 		if e := tx.Rollback(context.Background()); e != nil {
-			return -1, err
+			return 0, err
 		}
 		return 0, err
 	}
@@ -44,7 +44,7 @@ func (t *TodoItemPostgres) Create(listId int, item models.TodoItem) (int, error)
 	_, err = tx.Exec(context.Background(), createListItemsQuery, listId, itemId)
 	if err != nil {
 		if e := tx.Rollback(context.Background()); e != nil {
-			return -1, err
+			return 0, err
 		}
 		return 0, err
 	}

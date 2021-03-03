@@ -20,13 +20,13 @@ func NewTodoListPostgres(pool *pgxpool.Pool) *TodoListPostgres {
 func (t *TodoListPostgres) Create(userId int, list models.TodoList) (int, error) {
 	conn, err := t.pool.Acquire(context.Background())
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 	defer conn.Release()
 
 	tx, err := conn.Begin(context.Background())
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	var id int
@@ -34,7 +34,7 @@ func (t *TodoListPostgres) Create(userId int, list models.TodoList) (int, error)
 	row := tx.QueryRow(context.Background(), createListQuery, list.Title, list.Description)
 	if err := row.Scan(&id); err != nil {
 		if e := tx.Rollback(context.Background()); e != nil {
-			return -1, err
+			return 0, err
 		}
 		return 0, err
 	}
@@ -43,9 +43,9 @@ func (t *TodoListPostgres) Create(userId int, list models.TodoList) (int, error)
 	_, err = tx.Exec(context.Background(), createUsersListQuery, userId, id)
 	if err != nil {
 		if e := tx.Rollback(context.Background()); e != nil {
-			return -1, err
+			return 0, err
 		}
-		return -1, err
+		return 0, err
 	}
 
 	return id, tx.Commit(context.Background())

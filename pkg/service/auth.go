@@ -33,7 +33,7 @@ func NewAuthService(repo repository.Authorization) *AuthService {
 func (as *AuthService) CreateUser(user models.User) (int, error) {
 	hashPassword, err := generatePasswordHash(user.Password)
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	user.Password = hashPassword
@@ -73,12 +73,12 @@ func (as *AuthService) ParseToken(accessToken string) (int, error) {
 
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, operation)
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	claims, ok := token.Claims.(*tokenClaims)
 	if !ok {
-		return -1, errors.New("token claims aren't of type")
+		return 0, errors.New("token claims aren't of type")
 	}
 
 	return claims.UserId, nil
