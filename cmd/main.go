@@ -7,13 +7,24 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/TodoApp2021/RESTful_React/pkg/handler"
-	"github.com/TodoApp2021/RESTful_React/pkg/repository"
-	"github.com/TodoApp2021/RESTful_React/pkg/server"
-	"github.com/TodoApp2021/RESTful_React/pkg/service"
+	"github.com/TodoApp2021/go-rest-react/pkg/handler"
+	"github.com/TodoApp2021/go-rest-react/pkg/repository"
+	"github.com/TodoApp2021/go-rest-react/pkg/server"
+	"github.com/TodoApp2021/go-rest-react/pkg/service"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
+
+// @title ToDo App 2021
+// @version Beta
+// @description RESTful API.
+
+// @host localhost:8000
+// @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in Header
+// @name Authorization
 
 func main() {
 	if err := initConfig(); err != nil {

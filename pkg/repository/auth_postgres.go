@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/TodoApp2021/RESTful_React/pkg/models"
+	"github.com/TodoApp2021/go-rest-react/pkg/models"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
