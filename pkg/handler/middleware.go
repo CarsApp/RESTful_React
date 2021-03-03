@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
@@ -9,6 +10,7 @@ import (
 
 const (
 	AUTHORIZATION_HEADER = "Authorization"
+	USER_ID              = "userId"
 )
 
 func (h *Handler) userIndentity(c *gin.Context) {
@@ -31,5 +33,21 @@ func (h *Handler) userIndentity(c *gin.Context) {
 		return
 	}
 
-	c.Set("userId", userId)
+	c.Set(USER_ID, userId)
+}
+
+func getUserId(c *gin.Context) (int, error) {
+	id, ok := c.Get(USER_ID)
+	if !ok {
+		newErrorResponse(c, http.StatusInternalServerError, "user id not found")
+		return 0, errors.New("user id not found")
+	}
+
+	idInt, ok := id.(int)
+	if !ok {
+		newErrorResponse(c, http.StatusInternalServerError, "user id is of invalid type")
+		return 0, errors.New("user id not found")
+	}
+
+	return idInt, nil
 }

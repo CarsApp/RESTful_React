@@ -1,6 +1,12 @@
 package main
 
 import (
+	"context"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+
 	"github.com/TodoApp2021/RESTful_React/pkg/handler"
 	"github.com/TodoApp2021/RESTful_React/pkg/repository"
 	"github.com/TodoApp2021/RESTful_React/pkg/server"
@@ -26,9 +32,26 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	srv := new(server.Server)
-	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		logrus.Fatalf("error occured while running http server: %s", err.Error())
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+			if err == http.ErrServerClosed {
+				logrus.Infof("Server closed under request: %v", err)
+			} else {
+				logrus.Fatalf("error occured while running http server: %s", err.Error())
+			}
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
+	poolDB.Close()
+	logrus.Print("Closed Pool DB")
+	if err := srv.Shutdown(context.TODO()); err != nil {
+		log.Fatalf("Server Shutdown Failed: %+v", err)
 	}
+	logrus.Print("Gracefool shutdown")
 }
 
 func initConfig() error {

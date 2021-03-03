@@ -13,7 +13,7 @@ CREATE TABLE users (
 CREATE TABLE todo_lists (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL
+    description VARCHAR(255)
 );
 
 CREATE TABLE users_lists (
@@ -25,11 +25,11 @@ CREATE TABLE users_lists (
 CREATE TABLE todo_items (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
     done BOOLEAN DEFAULT false NOT NULL
 );
 
-CREATE TABLE list_items (
+CREATE TABLE lists_items (
     id SERIAL PRIMARY KEY,
     item_id INT REFERENCES todo_items(id) ON DELETE CASCADE NOT NULL,
     list_id INT REFERENCES todo_lists(id) ON DELETE CASCADE NOT NULL
