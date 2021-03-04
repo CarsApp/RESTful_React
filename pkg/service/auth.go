@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/TodoApp2021/go-rest-react/pkg/models"
-	"github.com/TodoApp2021/go-rest-react/pkg/repository"
+	"github.com/TodoApp2021/gorestreact/pkg/models"
+	"github.com/TodoApp2021/gorestreact/pkg/repository"
 	"github.com/dgrijalva/jwt-go"
 )
 

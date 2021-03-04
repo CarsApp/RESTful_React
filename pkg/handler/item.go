@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/TodoApp2021/go-rest-react/pkg/models"
+	"github.com/TodoApp2021/gorestreact/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 
