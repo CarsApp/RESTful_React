@@ -5,3 +5,7 @@
 - Swagger :heavy_check_mark:
 - Postgres SQL :heavy_check_mark:
 - Kafka :x:
+
+# Screenshot Swagger:
+
+![Swagger](/img/swagger_home.png)
