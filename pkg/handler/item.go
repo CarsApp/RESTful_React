@@ -8,6 +8,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Create ToDo item by list ID
+// @Security ApiKeyAuth
+// @Tags items
+// @Description Create ToDo item by list ID
+// @ID create-item-by-id
+// @Accept  json
+// @Produce  json
+// @Param id path int true "List ID"
+// @Param input body models.TodoItem true "item info"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/lists/{id}/items [post]
 func (h *Handler) createItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -38,6 +52,19 @@ func (h *Handler) createItem(c *gin.Context) {
 	})
 }
 
+// @Summary Get all items ToDo by list ID
+// @Security ApiKeyAuth
+// @Tags items
+// @Description Get all items ToDo by list ID
+// @ID get-all-items-by-id
+// @Accept  json
+// @Produce  json
+// @Param id path int true "List ID"
+// @Success 200 {object} getAllListsResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/lists/{id}/items [get]
 func (h *Handler) getAllItems(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -60,6 +87,19 @@ func (h *Handler) getAllItems(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
+// @Summary Get item ToDo by ID
+// @Security ApiKeyAuth
+// @Tags items
+// @Description Get item ToDo by ID
+// @ID get-item-by-id
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Item ID"
+// @Success 200 {object} models.TodoItem
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/items/{id} [get]
 func (h *Handler) getItemById(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -82,6 +122,20 @@ func (h *Handler) getItemById(c *gin.Context) {
 	c.JSON(http.StatusOK, item)
 }
 
+// @Summary Update item ToDo by ID
+// @Security ApiKeyAuth
+// @Tags items
+// @Description Update item ToDo by ID
+// @ID update-item-by-id
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Item ID"
+// @Param input body models.UpdateItemInput true "update item info"
+// @Success 200 {object} statusResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/items/{id} [put]
 func (h *Handler) updateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -109,6 +163,19 @@ func (h *Handler) updateItem(c *gin.Context) {
 	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
 
+// @Summary Delete item ToDo by ID
+// @Security ApiKeyAuth
+// @Tags items
+// @Description Delete item ToDo by ID
+// @ID delete-item-by-id
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Item ID"
+// @Success 200 {object} statusResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/items/{id} [delete]
 func (h *Handler) deleteItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {

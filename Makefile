@@ -18,3 +18,6 @@ down-db:
 
 lint: 
 	golangci-lint run
+
+gen-swag:
+	swag init --parseInternal --parseDependency -g ./cmd/main.go

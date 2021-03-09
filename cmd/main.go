@@ -15,6 +15,16 @@ import (
 	"github.com/spf13/viper"
 )
 
+// @title REST API Todo
+// @version Beta
+// @description This is a REST API Todo.
+// @contact.name Vladislav Zhuchkov
+// @contact.url https://t.me/Vlad1k_zhuchkov
+// @host localhost:8000
+// @BasePath /
+// @securityDefinitions.apikey ApiKeyAuth
+// @in Header
+// @name Authorization
 func main() {
 	if err := initConfig(); err != nil {
 		logrus.Fatalf("error initializing configs: %s", err.Error())
