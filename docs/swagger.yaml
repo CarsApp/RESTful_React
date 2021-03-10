@@ -234,6 +234,15 @@ paths:
       - application/json
       description: Get all lists ToDo
       operationId: get-all-lists
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
       produces:
       - application/json
       responses:

@@ -56,18 +56,42 @@ type getAllListsResponse struct {
 // @ID get-all-lists
 // @Accept  json
 // @Produce  json
+// @Param limit query int false "Limit"
+// @Param offset query int false "Offset"
 // @Success 200 {object} getAllListsResponse
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/lists [get]
 func (h *Handler) getAllLists(c *gin.Context) {
+	var limit, offset string
+
+	limit = c.Query("limit")
+	if limit != "" {
+		if l, err := strconv.Atoi(limit); err != nil || l < 1 {
+			newErrorResponse(c, http.StatusBadRequest, "invalid limit query")
+			return
+		}
+	}
+
+	offset = c.Query("offset")
+	if offset != "" {
+		if limit == "" {
+			newErrorResponse(c, http.StatusBadRequest, "incorrect query")
+			return
+		}
+		if l, err := strconv.Atoi(offset); err != nil || l < 0 {
+			newErrorResponse(c, http.StatusBadRequest, "invalid offset query")
+			return
+		}
+	}
+
 	userId, err := getUserId(c)
 	if err != nil {
 		return
 	}
 
-	lists, err := h.services.TodoList.GetAll(userId)
+	lists, err := h.services.TodoList.GetAll(userId, limit, offset)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

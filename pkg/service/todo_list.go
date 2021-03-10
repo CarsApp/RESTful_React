@@ -17,8 +17,8 @@ func (s *TodoListService) Create(userId int, list models.TodoList) (int, error) 
 	return s.repo.Create(userId, list)
 }
 
-func (s *TodoListService) GetAll(userId int) ([]models.TodoList, error) {
-	return s.repo.GetAll(userId)
+func (s *TodoListService) GetAll(userId int, limit, offset string) ([]models.TodoList, error) {
+	return s.repo.GetAll(userId, limit, offset)
 }
 
 func (s *TodoListService) GetById(userId, listId int) (models.TodoList, error) {

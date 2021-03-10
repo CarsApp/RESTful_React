@@ -51,19 +51,37 @@ func (t *TodoListPostgres) Create(userId int, list models.TodoList) (int, error)
 	return id, tx.Commit(context.Background())
 }
 
-func (t *TodoListPostgres) GetAll(userId int) ([]models.TodoList, error) {
+func (t *TodoListPostgres) GetAll(userId int, limit, offset string) ([]models.TodoList, error) {
 	conn, err := t.pool.Acquire(context.Background())
 	if err != nil {
 		return nil, err
 	}
 	defer conn.Release()
 
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	args = append(args, userId)
+	argId := 2
+
+	if limit != "" {
+		setValues = append(setValues, fmt.Sprintf("LIMIT $%d", argId))
+		args = append(args, limit)
+		argId++
+	}
+
+	if offset != "" {
+		setValues = append(setValues, fmt.Sprintf("OFFSET $%d", argId))
+		args = append(args, offset)
+	}
+
+	setQuery := strings.Join(setValues, " ")
+
 	var lists []models.TodoList
+	// limit offset
+	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1 %s",
+		todoListsTable, usersListsTable, setQuery)
 
-	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1",
-		todoListsTable, usersListsTable)
-
-	rows, err := conn.Query(context.Background(), query, userId)
+	rows, err := conn.Query(context.Background(), query, args...)
 	if err != nil {
 		return nil, err
 	}
