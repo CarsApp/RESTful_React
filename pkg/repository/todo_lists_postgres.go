@@ -51,10 +51,10 @@ func (t *TodoListPostgres) Create(userId int, list models.TodoList) (int, error)
 	return id, tx.Commit(context.Background())
 }
 
-func (t *TodoListPostgres) GetAll(userId int, limit, offset string) ([]models.TodoList, error) {
+func (t *TodoListPostgres) GetAll(userId int, limit, offset string) ([]models.TodoList, int, error) {
 	conn, err := t.pool.Acquire(context.Background())
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer conn.Release()
 
@@ -76,26 +76,33 @@ func (t *TodoListPostgres) GetAll(userId int, limit, offset string) ([]models.To
 
 	setQuery := strings.Join(setValues, " ")
 
-	var lists []models.TodoList
+	lists := make([]models.TodoList, 0)
+	count := 0
 	// limit offset
 	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1 %s",
 		todoListsTable, usersListsTable, setQuery)
-
+	queryCount := fmt.Sprintf(
+		"SELECT COUNT(*) FROM (SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1 ORDER BY tl.id) as t",
+		todoListsTable, usersListsTable)
+	row := conn.QueryRow(context.Background(), queryCount, userId)
+	if err := row.Scan(&count); err != nil {
+		return nil, 0, err
+	}
 	rows, err := conn.Query(context.Background(), query, args...)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	for rows.Next() {
 		list := models.TodoList{}
 		if err = rows.Scan(&list.Id, &list.Title, &list.Description); err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 
 		lists = append(lists, list)
 	}
 
-	return lists, nil
+	return lists, count, nil
 }
 
 func (t *TodoListPostgres) GetById(userId, listId int) (models.TodoList, error) {

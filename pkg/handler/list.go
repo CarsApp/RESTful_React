@@ -46,7 +46,8 @@ func (h *Handler) createList(c *gin.Context) {
 }
 
 type getAllListsResponse struct {
-	Data []models.TodoList `json:"data"`
+	Count int               `json:"count"`
+	Data  []models.TodoList `json:"data"`
 }
 
 // @Summary Get All Lists ToDo
@@ -91,14 +92,15 @@ func (h *Handler) getAllLists(c *gin.Context) {
 		return
 	}
 
-	lists, err := h.services.TodoList.GetAll(userId, limit, offset)
+	lists, count, err := h.services.TodoList.GetAll(userId, limit, offset)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	c.JSON(http.StatusOK, getAllListsResponse{
-		Data: lists,
+		Count: count,
+		Data:  lists,
 	})
 }
 
