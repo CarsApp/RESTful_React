@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { DISPLAY_CREATING_ITEM_MODAL, DISPLAY_EDITING_LIST_MODAL, OK_RESPONSE_CODE } from '../../constants';
+import { DISPLAY_CREATING_ITEM_MODAL, DISPLAY_EDITING_LIST_MODAL } from '../../constants';
 import { deleteList } from '../../services/lists';
 import { getItems, itemChanged, updateItem } from '../../services/items';
 import { AccordionContext, Button, Container, Row, useAccordionToggle, Col, Card, Accordion, ListGroup } from 'react-bootstrap';
 import { FaAngleDown, FaAngleUp, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import TodoItem from './TodoItem';
 import PropTypes from 'prop-types';
+import './TodoListsBlock.scss';
 
 
 const initialState = {
@@ -26,7 +27,7 @@ function CustomToggle({ onDisplayModalTypeChanged, listModel }) {
     }
 
     function deletedOnClick() {
-        this.setState({ isError: deleteList(listModel.id) === OK_RESPONSE_CODE })
+        deleteList(listModel.id);
     }
 
     return (

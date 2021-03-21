@@ -5,6 +5,7 @@ import { Accordion, Button } from 'react-bootstrap';
 import TodoPagination from './TodoPagination';
 import TodoListBlock from './TodoListsBlock';
 import { withRouter } from 'react-router-dom';
+import './TodoLists.scss';
 
 const FIRST_PAGE = 1;
 
@@ -60,13 +61,15 @@ class TodoLists extends React.Component {
         getListsByPage(page).then(response => {
             if (response.data === undefined && response.count === undefined)
                 return;
+
             const maxPage = Math.ceil(response.count / LIMIT_LISTS_IN_PAGE);
-            this.setState({ lists: response.data, maxPage });
+            this.setState({ lists: response.data, maxPage, todoCount: response.count });
         })
     }
 
     render() {
         const {
+            todoCount,
             page,
             maxPage,
             lists
@@ -83,9 +86,13 @@ class TodoLists extends React.Component {
                     <div>
                         <Button variant='primary' block onClick={() => onDisplayModalTypeChanged({ displayModalType: DISPLAY_CREATING_LIST_MODAL })}>Add a new list</Button>
                         <Accordion defaultActiveKey='0'>
-                            {lists.map(element => <TodoListBlock key={element.id} element={element} onDisplayModalTypeChanged={onDisplayModalTypeChanged} />)}
+                            {lists.map(element =>
+                                <TodoListBlock key={element.id} element={element} onDisplayModalTypeChanged={onDisplayModalTypeChanged} />
+                            )}
                         </Accordion>
-                        <TodoPagination currentPage={page} maxPagesCount={maxPage} />
+                        {(todoCount > LIMIT_LISTS_IN_PAGE) &&
+                            <TodoPagination currentPage={page} maxPagesCount={maxPage} />
+                        }
                     </div>}
             </div>
         )

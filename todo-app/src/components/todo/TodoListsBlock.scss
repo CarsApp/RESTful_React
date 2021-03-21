@@ -1,0 +1,11 @@
+.list_items {
+    margin-top: 5px;
+}
+
+.todo_lists_block {
+    &_buttons {
+        button {
+            margin-left: 5px;
+        }
+    }
+}

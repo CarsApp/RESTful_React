@@ -2,6 +2,7 @@ import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 import React from 'react';
 import { DISPLAY_SIGN_IN_MODAL, DISPLAY_SIGN_UP_MODAL } from '../constants';
 import { logout, usernameChanged } from '../services/accounts';
+import './Header.scss';
 
 class Header extends React.Component {
     constructor() {

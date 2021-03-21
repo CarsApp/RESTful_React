@@ -4,13 +4,13 @@ go 1.16
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+	github.com/confluentinc/confluent-kafka-go v1.6.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
 	github.com/jackc/pgx/v4 v4.10.1
 	github.com/jackc/tern v1.12.4
 	github.com/kr/text v0.2.0 // indirect
-	github.com/segmentio/kafka-go v0.4.10
 	github.com/sirupsen/logrus v1.8.0
 	github.com/spf13/viper v1.7.1
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14

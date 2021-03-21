@@ -10,12 +10,6 @@ const itemChangedSubject = new Subject();
 
 export const itemChanged = itemChangedSubject.asObservable();
 
-// export async function getListsByPage(page) {
-//     const limit = LIMIT_LISTS_IN_PAGE;
-//     const offset = (limit * page) - limit;
-//     return await getLists(limit, offset);
-// }
-
 export async function getItems(listId) {
     let items = [];
 
@@ -54,7 +48,7 @@ export async function getItemById(itemId) {
 
 export async function createItem(ItemToCreate, listId) {
     try {
-        await axios.post(`${listsUrl}/${listId}/items/`, ItemToCreate, {
+        await axios.post(`${listsUrl}${listId}/items/`, ItemToCreate, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('Authorization')}`
             }

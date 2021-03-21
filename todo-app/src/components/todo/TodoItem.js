@@ -4,6 +4,7 @@ import { deleteItem } from '../../services/items';
 import { Button, Col, Container, ListGroupItem, Row } from 'react-bootstrap';
 import { FaCheck, FaEdit, FaReply, FaTrashAlt } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import './TodoItem.scss';
 
 class TodoItem extends React.Component {
     constructor() {

@@ -1,0 +1,16 @@
+.block_item {
+    &_description {
+        opacity: .6;
+        font-size: .9rem;
+    }
+
+    &_done{
+        text-decoration: line-through;
+    }
+
+    &_buttons{
+        button {
+            margin-left: 5px;
+        }
+    }
+}

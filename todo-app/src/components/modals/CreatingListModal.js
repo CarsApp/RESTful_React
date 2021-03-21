@@ -4,7 +4,7 @@ import { DISPLAY_CREATING_LIST_MODAL, UNKNOWN_ERROR_RESPONSE_CODE } from "../../
 import { createList } from "../../services/lists";
 
 const initialState = {
-    isEmptyDate: false,
+    isEmptyData: false,
     isUnknownError: false,
     isWaitingForResponse: false,
     title: '',

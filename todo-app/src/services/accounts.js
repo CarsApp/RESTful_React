@@ -7,9 +7,11 @@ const baseUrl = 'http://localhost:8000/auth/';
 
 const isLoggedInChangedSubject = new Subject();
 const usernameChangedSubject = new Subject();
+const registerSucessedSubject = new Subject();
 
 export const isLoggedInChanged = isLoggedInChangedSubject.asObservable();
 export const usernameChanged = usernameChangedSubject.asObservable();
+export const registerSucessed = registerSucessedSubject.asObservable();
 
 export async function signIn(username, password) {
     let responseCode = OK_RESPONSE_CODE;
@@ -48,6 +50,7 @@ export async function signUp(name, username, password) {
         responseCode = USERNAME_VALID_ERROR_RESPONSE_CODE;
     }
 
+    registerSucessedSubject.next();
     return { responseCode, status };
 }
 

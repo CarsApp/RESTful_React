@@ -1,20 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LinkButton from '../LinkButton';
+import './TodoPagination.scss';
 
 const FIRST_PAGE = 1;
 
-const initialState = {
-    previousPageLink: undefined,
-    nextPageLink: undefined,
-    isFirstTime: true,
-    isDisplay: false
-};
-
 class TodoPagination extends React.Component {
-    constructor() {
-        super();
-        this.state = initialState;
+    constructor(props) {
+        super(props);
+        this.state = this.getUpdatedState(props);
+    }
+
+    getUpdatedState(props) {
+        const {
+            currentPage,
+            maxPagesCount,
+        } = props;
+
+        const previousPageLink = currentPage <= FIRST_PAGE ? undefined : getLink(currentPage - 1);
+        const nextPageLink = currentPage <= maxPagesCount ? undefined : getLink(currentPage + 1);
+
+        return {
+            previousPageLink,
+            nextPageLink,
+        };
     }
 
     componentDidUpdate(prevProps) {
@@ -28,18 +37,10 @@ class TodoPagination extends React.Component {
             maxPagesCount,
         } = this.props;
 
-        if (!this.state.isFirstTime && prevCurrentPage === currentPage && prevMaxPagesCount === maxPagesCount)
+        if (prevCurrentPage === currentPage && prevMaxPagesCount === maxPagesCount)
             return;
 
-        const previousPageLink = currentPage <= FIRST_PAGE ? undefined : getLink(currentPage - 1);
-        const nextPageLink = currentPage <= maxPagesCount ? undefined : getLink(currentPage + 1);
-
-        this.setState({
-            previousPageLink,
-            nextPageLink,
-            isFirstTime: false,
-            isDisplay: true
-        });
+        this.setState(this.getUpdatedState(this.props));
     }
 
     render() {

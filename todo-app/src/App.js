@@ -1,16 +1,17 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Alert, Container } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './components/Header';
 import TodoLists from './components/todo/TodoLists';
 import { WITHOUT_MODAL } from './constants';
-import { isLoggedInChanged } from './services/accounts';
+import { isLoggedInChanged, registerSucessed } from './services/accounts';
 import SignInModal from './components/modals/SignInModal';
 import SignUpModal from './components/modals/SignUpModal';
 import CreatingItemModal from './components/modals/CreatingItemModal';
 import CreatingListModal from './components/modals/CreatingListModal';
 import EditingItemModal from './components/modals/EditingItemModal';
 import EditingListModal from './components/modals/EditingListModal';
+import './App.scss';
 
 
 class App extends React.Component {
@@ -21,12 +22,14 @@ class App extends React.Component {
 
     this.state = {
       isLoggedIn: accountToken !== null,
-      displayModalType: WITHOUT_MODAL
+      displayModalType: WITHOUT_MODAL,
+      isDisplayRegisterSucessedAlert: false,
     };
   }
 
 
   handleDisplayModalTypeChanged = displayModalType => this.setState({ displayModalType });
+
   handleDisplayModalTypeWithParamsChanged = params => {
     const newState = {};
 
@@ -44,8 +47,11 @@ class App extends React.Component {
 
   handleModalClose = () => this.setState({ displayModalType: WITHOUT_MODAL });
 
+  handleRegisterSuccessedAlertClose = () => this.setState({ isDisplayRegisterSucessedAlert: false });
+
   componentDidMount() {
     this.isLoggedInChangedSubscriber = isLoggedInChanged.subscribe(isLoggedIn => this.setState({ isLoggedIn }));
+    this.registerSucessedSubscriber = registerSucessed.subscribe()
   }
 
   componentWillUnmount() {
@@ -57,13 +63,19 @@ class App extends React.Component {
       isLoggedIn,
       displayModalType,
       selectedListId,
-      selectedItemId
+      selectedItemId,
+      isDisplayRegisterSucessedAlert
     } = this.state;
 
     return (
       <Router>
         <Header isLoggedIn={isLoggedIn} onDisplayModalTypeChanged={this.handleDisplayModalTypeChanged} />
         <Container>
+          {isDisplayRegisterSucessedAlert &&
+            <Alert className='alert-header' variant='success' onClose={this.handleRegisterSuccessedAlertClose} dismissible>
+              <Alert.Heading>Sign Up is sucessed! Try Sign In.</Alert.Heading>
+            </Alert>
+          }
           <Switch>
             <Route path="/page/:page">
               <TodoLists isLoggedIn={isLoggedIn} onDisplayModalTypeChanged={this.handleDisplayModalTypeWithParamsChanged} />

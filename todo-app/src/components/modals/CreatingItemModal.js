@@ -4,7 +4,7 @@ import { DISPLAY_CREATING_ITEM_MODAL, UNKNOWN_ERROR_RESPONSE_CODE } from "../../
 import { createItem } from "../../services/items";
 
 const initialState = {
-    isEmptyDate: false,
+    isEmptyData: false,
     isUnknownError: false,
     isWaitingForResponse: false,
     title: '',

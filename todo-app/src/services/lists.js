@@ -28,9 +28,7 @@ export async function getLists(limit, offset) {
 
         const response = await axios.get(url, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('Authorization')}`,
-                // 'Access-Control-Request-Method': "GET",
-                // 'Access-Control-Request-Headers': 'Authorization'
+                'Authorization': `Bearer ${localStorage.getItem('Authorization')}`
             }
         });
         lists = response.data;
