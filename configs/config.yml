@@ -3,6 +3,5 @@ port: "8000"
 db:
   url: "postgres://postgres:postgres@localhost:5432/?sslmode=disable"
 
-# kafka:
-#   url: ""
-  
+kafka:
+  url: "localhost:9092"

@@ -7,6 +7,7 @@ CREATE TABLE users (
     name VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    telegram_id INT,
     registed TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

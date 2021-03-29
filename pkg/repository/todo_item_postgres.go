@@ -18,12 +18,13 @@ func NewTodoItemPostgres(pool *pgxpool.Pool) *TodoItemPostgres {
 }
 
 func (t *TodoItemPostgres) Create(listId int, item models.TodoItem) (int, error) {
-	conn, err := t.pool.Acquire(context.Background())
+	ctx := context.Background()
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return 0, err
 	}
 	defer conn.Release()
-	tx, err := conn.Begin(context.Background())
+	tx, err := conn.Begin(ctx)
 	if err != nil {
 		return 0, err
 	}
@@ -31,29 +32,30 @@ func (t *TodoItemPostgres) Create(listId int, item models.TodoItem) (int, error)
 	var itemId int
 	createItemQuery := fmt.Sprintf("INSERT INTO %s (title, description) values ($1, $2) RETURNING id", todoItemsTable)
 
-	row := tx.QueryRow(context.Background(), createItemQuery, item.Title, item.Description)
+	row := tx.QueryRow(ctx, createItemQuery, item.Title, item.Description)
 	err = row.Scan(&itemId)
 	if err != nil {
-		if e := tx.Rollback(context.Background()); e != nil {
+		if e := tx.Rollback(ctx); e != nil {
 			return 0, err
 		}
 		return 0, err
 	}
 
 	createListItemsQuery := fmt.Sprintf("INSERT INTO %s (list_id, item_id) values ($1, $2)", listsItemsTable)
-	_, err = tx.Exec(context.Background(), createListItemsQuery, listId, itemId)
+	_, err = tx.Exec(ctx, createListItemsQuery, listId, itemId)
 	if err != nil {
-		if e := tx.Rollback(context.Background()); e != nil {
+		if e := tx.Rollback(ctx); e != nil {
 			return 0, err
 		}
 		return 0, err
 	}
 
-	return itemId, tx.Commit(context.Background())
+	return itemId, tx.Commit(ctx)
 }
 
 func (t *TodoItemPostgres) GetAll(userId, listId int) ([]models.TodoItem, error) {
-	conn, err := t.pool.Acquire(context.Background())
+	ctx := context.Background()
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +66,7 @@ func (t *TodoItemPostgres) GetAll(userId, listId int) ([]models.TodoItem, error)
 									INNER JOIN %s ul on ul.list_id = li.list_id WHERE li.list_id = $1 AND ul.user_id = $2`,
 		todoItemsTable, listsItemsTable, usersListsTable)
 
-	rows, err := conn.Query(context.Background(), query, listId, userId)
+	rows, err := conn.Query(ctx, query, listId, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -82,9 +84,10 @@ func (t *TodoItemPostgres) GetAll(userId, listId int) ([]models.TodoItem, error)
 }
 
 func (t *TodoItemPostgres) GetById(userId, itemId int) (models.TodoItem, error) {
+	ctx := context.Background()
 	var item models.TodoItem
 
-	conn, err := t.pool.Acquire(context.Background())
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return item, err
 	}
@@ -94,7 +97,7 @@ func (t *TodoItemPostgres) GetById(userId, itemId int) (models.TodoItem, error) 
 									INNER JOIN %s ul on ul.list_id = li.list_id WHERE ti.id = $1 AND ul.user_id = $2`,
 		todoItemsTable, listsItemsTable, usersListsTable)
 
-	row := conn.QueryRow(context.Background(), query, itemId, userId)
+	row := conn.QueryRow(ctx, query, itemId, userId)
 	if err := row.Scan(&item.Id, &item.Title, &item.Description, &item.Done); err != nil {
 		return item, err
 	}
@@ -103,7 +106,8 @@ func (t *TodoItemPostgres) GetById(userId, itemId int) (models.TodoItem, error) 
 }
 
 func (t *TodoItemPostgres) Delete(userId, itemId int) error {
-	conn, err := t.pool.Acquire(context.Background())
+	ctx := context.Background()
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return err
 	}
@@ -113,13 +117,14 @@ func (t *TodoItemPostgres) Delete(userId, itemId int) error {
 									WHERE ti.id = li.item_id AND li.list_id = ul.list_id AND ul.user_id = $1 AND ti.id = $2`,
 		todoItemsTable, listsItemsTable, usersListsTable)
 
-	_, err = conn.Exec(context.Background(), query, userId, itemId)
+	_, err = conn.Exec(ctx, query, userId, itemId)
 
 	return err
 }
 
 func (t *TodoItemPostgres) Update(userId, itemId int, input models.UpdateItemInput) error {
-	conn, err := t.pool.Acquire(context.Background())
+	ctx := context.Background()
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return err
 	}
@@ -154,6 +159,6 @@ func (t *TodoItemPostgres) Update(userId, itemId int, input models.UpdateItemInp
 		todoItemsTable, setQuery, listsItemsTable, usersListsTable, argId, argId+1)
 	args = append(args, userId, itemId)
 
-	_, err = conn.Exec(context.Background(), query, args...)
+	_, err = conn.Exec(ctx, query, args...)
 	return err
 }

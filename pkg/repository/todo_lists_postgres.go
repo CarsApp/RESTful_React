@@ -18,41 +18,43 @@ func NewTodoListPostgres(pool *pgxpool.Pool) *TodoListPostgres {
 }
 
 func (t *TodoListPostgres) Create(userId int, list models.TodoList) (int, error) {
-	conn, err := t.pool.Acquire(context.Background())
+	ctx := context.Background()
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return 0, err
 	}
 	defer conn.Release()
 
-	tx, err := conn.Begin(context.Background())
+	tx, err := conn.Begin(ctx)
 	if err != nil {
 		return 0, err
 	}
 
 	var id int
 	createListQuery := fmt.Sprintf("INSERT INTO %s (title, description) VALUES ($1, $2) RETURNING id", todoListsTable)
-	row := tx.QueryRow(context.Background(), createListQuery, list.Title, list.Description)
+	row := tx.QueryRow(ctx, createListQuery, list.Title, list.Description)
 	if err := row.Scan(&id); err != nil {
-		if e := tx.Rollback(context.Background()); e != nil {
+		if e := tx.Rollback(ctx); e != nil {
 			return 0, err
 		}
 		return 0, err
 	}
 
 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, list_id) VALUES ($1, $2)", usersListsTable)
-	_, err = tx.Exec(context.Background(), createUsersListQuery, userId, id)
+	_, err = tx.Exec(ctx, createUsersListQuery, userId, id)
 	if err != nil {
-		if e := tx.Rollback(context.Background()); e != nil {
+		if e := tx.Rollback(ctx); e != nil {
 			return 0, err
 		}
 		return 0, err
 	}
 
-	return id, tx.Commit(context.Background())
+	return id, tx.Commit(ctx)
 }
 
 func (t *TodoListPostgres) GetAll(userId int, limit, offset string) ([]models.TodoList, int, error) {
-	conn, err := t.pool.Acquire(context.Background())
+	ctx := context.Background()
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -84,11 +86,11 @@ func (t *TodoListPostgres) GetAll(userId int, limit, offset string) ([]models.To
 	queryCount := fmt.Sprintf(
 		"SELECT COUNT(*) FROM (SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1 ORDER BY tl.id) as t",
 		todoListsTable, usersListsTable)
-	row := conn.QueryRow(context.Background(), queryCount, userId)
+	row := conn.QueryRow(ctx, queryCount, userId)
 	if err := row.Scan(&count); err != nil {
 		return nil, 0, err
 	}
-	rows, err := conn.Query(context.Background(), query, args...)
+	rows, err := conn.Query(ctx, query, args...)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -106,8 +108,9 @@ func (t *TodoListPostgres) GetAll(userId int, limit, offset string) ([]models.To
 }
 
 func (t *TodoListPostgres) GetById(userId, listId int) (models.TodoList, error) {
+	ctx := context.Background()
 	var list models.TodoList
-	conn, err := t.pool.Acquire(context.Background())
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return list, err
 	}
@@ -117,7 +120,7 @@ func (t *TodoListPostgres) GetById(userId, listId int) (models.TodoList, error) 
 								INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1 AND ul.list_id = $2`,
 		todoListsTable, usersListsTable)
 
-	row := conn.QueryRow(context.Background(), query, userId, listId)
+	row := conn.QueryRow(ctx, query, userId, listId)
 	if err := row.Scan(&list.Id, &list.Title, &list.Description); err != nil {
 		return list, err
 	}
@@ -126,7 +129,8 @@ func (t *TodoListPostgres) GetById(userId, listId int) (models.TodoList, error) 
 }
 
 func (t *TodoListPostgres) Delete(userId, listId int) error {
-	conn, err := t.pool.Acquire(context.Background())
+	ctx := context.Background()
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return err
 	}
@@ -135,13 +139,14 @@ func (t *TodoListPostgres) Delete(userId, listId int) error {
 	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.list_id AND ul.user_id=$1 AND ul.list_id=$2",
 		todoListsTable, usersListsTable)
 
-	_, err = conn.Exec(context.Background(), query, userId, listId)
+	_, err = conn.Exec(ctx, query, userId, listId)
 
 	return err
 }
 
 func (t *TodoListPostgres) Update(userId, listId int, input models.UpdateListInput) error {
-	conn, err := t.pool.Acquire(context.Background())
+	ctx := context.Background()
+	conn, err := t.pool.Acquire(ctx)
 	if err != nil {
 		return err
 	}
@@ -169,6 +174,6 @@ func (t *TodoListPostgres) Update(userId, listId int, input models.UpdateListInp
 		todoListsTable, setQuery, usersListsTable, argId, argId+1)
 	args = append(args, listId, userId)
 
-	_, err = conn.Exec(context.Background(), query, args...)
+	_, err = conn.Exec(ctx, query, args...)
 	return err
 }

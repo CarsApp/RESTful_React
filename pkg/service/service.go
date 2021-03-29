@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/TodoApp2021/gorestreact/pkg/kafka"
 	"github.com/TodoApp2021/gorestreact/pkg/models"
 	"github.com/TodoApp2021/gorestreact/pkg/repository"
 )
@@ -33,10 +34,10 @@ type Service struct {
 	TodoItem
 }
 
-func NewService(repos *repository.Repository) *Service {
+func NewService(repos *repository.Repository, producer *kafka.KProducer) *Service {
 	return &Service{
-		Authorization: NewAuthService(repos.Authorization),
-		TodoList:      NewTodoListService(repos.TodoList),
-		TodoItem:      NewTodoItemService(repos.TodoItem, repos.TodoList),
+		Authorization: NewAuthService(repos.Authorization, producer.Authorization),
+		TodoList:      NewTodoListService(repos.TodoList, producer.TodoList),
+		TodoItem:      NewTodoItemService(repos.TodoItem, repos.TodoList, producer.TodoItem),
 	}
 }

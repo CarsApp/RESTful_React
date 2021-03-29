@@ -4,7 +4,7 @@
 - REST API :heavy_check_mark:
 - Swagger :heavy_check_mark:
 - Postgres SQL :heavy_check_mark:
-- Kafka :x:
+- Kafka :heavy_check_mark:
 
 # Screenshot Swagger:
 

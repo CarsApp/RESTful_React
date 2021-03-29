@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/TodoApp2021/gorestreact/pkg/kafka"
 	"github.com/TodoApp2021/gorestreact/pkg/models"
 	"github.com/TodoApp2021/gorestreact/pkg/repository"
 	"github.com/dgrijalva/jwt-go"
@@ -23,11 +24,12 @@ type tokenClaims struct {
 }
 
 type AuthService struct {
-	repo repository.Authorization
+	repo     repository.Authorization
+	producer kafka.Authorization // TODO
 }
 
-func NewAuthService(repo repository.Authorization) *AuthService {
-	return &AuthService{repo: repo}
+func NewAuthService(repo repository.Authorization, producer kafka.Authorization) *AuthService {
+	return &AuthService{repo: repo, producer: producer}
 }
 
 func (as *AuthService) CreateUser(user models.User) (int, error) {
@@ -37,7 +39,9 @@ func (as *AuthService) CreateUser(user models.User) (int, error) {
 	}
 
 	user.Password = hashPassword
-	return as.repo.CreateUser(user)
+
+	// return as.repo.CreateUser(user) // to postgres sql
+	return 0, as.producer.CreateUser(user) // to kafka
 }
 
 func (as *AuthService) GenerateToken(username, password string) (string, error) {

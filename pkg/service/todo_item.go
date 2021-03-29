@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/TodoApp2021/gorestreact/pkg/kafka"
 	"github.com/TodoApp2021/gorestreact/pkg/models"
 	"github.com/TodoApp2021/gorestreact/pkg/repository"
 )
@@ -8,10 +9,11 @@ import (
 type TodoItemService struct {
 	itemRepo repository.TodoItem
 	listRepo repository.TodoList
+	producer kafka.TodoItem // TODO
 }
 
-func NewTodoItemService(itemRepo repository.TodoItem, listRepo repository.TodoList) *TodoItemService {
-	return &TodoItemService{itemRepo: itemRepo, listRepo: listRepo}
+func NewTodoItemService(itemRepo repository.TodoItem, listRepo repository.TodoList, producer kafka.TodoItem) *TodoItemService {
+	return &TodoItemService{itemRepo: itemRepo, listRepo: listRepo, producer: producer}
 }
 
 func (s *TodoItemService) Create(userId, listId int, item models.TodoItem) (int, error) {
@@ -21,7 +23,8 @@ func (s *TodoItemService) Create(userId, listId int, item models.TodoItem) (int,
 		return 0, err
 	}
 
-	return s.itemRepo.Create(listId, item)
+	// return s.itemRepo.Create(listId, item) // to postgres sql
+	return 0, s.producer.Create(listId, item) // to kafka
 }
 
 func (s *TodoItemService) GetAll(userId, listId int) ([]models.TodoItem, error) {
@@ -33,9 +36,11 @@ func (s *TodoItemService) GetById(userId, itemId int) (models.TodoItem, error) {
 }
 
 func (s *TodoItemService) Delete(userId, itemId int) error {
-	return s.itemRepo.Delete(userId, itemId)
+	// return s.itemRepo.Delete(userId, itemId) // to postgres sql
+	return s.producer.Delete(userId, itemId) // to kafka
 }
 
 func (s *TodoItemService) Update(userId, itemId int, input models.UpdateItemInput) error {
-	return s.itemRepo.Update(userId, itemId, input)
+	// return s.itemRepo.Update(userId, itemId, input) // to postgres sql
+	return s.producer.Update(userId, itemId, input) // to kafka
 }

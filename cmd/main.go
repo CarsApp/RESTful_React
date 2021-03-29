@@ -8,6 +8,7 @@ import (
 	"os/signal"
 
 	"github.com/TodoApp2021/gorestreact/pkg/handler"
+	"github.com/TodoApp2021/gorestreact/pkg/kafka"
 	"github.com/TodoApp2021/gorestreact/pkg/repository"
 	"github.com/TodoApp2021/gorestreact/pkg/server"
 	"github.com/TodoApp2021/gorestreact/pkg/service"
@@ -37,8 +38,16 @@ func main() {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
 	}
 
+	kafkaProducer, err := kafka.NewProducerKafka(kafka.Config{
+		Url: viper.GetString("kafka.url"),
+	})
+	if err != nil {
+		logrus.Fatalf("failed to initialize kafka producer: %s", err.Error())
+	}
+
+	producer := kafka.NewKProducer(kafkaProducer)
 	repos := repository.NewRepository(poolDB)
-	services := service.NewService(repos)
+	services := service.NewService(repos, producer)
 	handlers := handler.NewHandler(services)
 
 	srv := new(server.Server)
