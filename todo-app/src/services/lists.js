@@ -65,7 +65,7 @@ export async function createList(ListToCreate) {
                 'Authorization': `Bearer ${localStorage.getItem('Authorization')}`
             }
         });
-        listChangedSubject.next();
+        setTimeout(() => listChangedSubject.next(), 1000);
         return { responseCode: OK_RESPONSE_CODE };
     } catch (error) {
         console.log(error);
@@ -80,7 +80,7 @@ export async function updateList(ListToUpdate, id) {
                 'Authorization': `Bearer ${localStorage.getItem('Authorization')}`
             }
         });
-        listChangedSubject.next();
+        setTimeout(() => listChangedSubject.next(), 1000);
         return { responseCode: OK_RESPONSE_CODE };
     } catch (error) {
         console.log(error);
@@ -95,8 +95,7 @@ export async function deleteList(id) {
                 'Authorization': `Bearer ${localStorage.getItem('Authorization')}`
             }
         });
-
-        listChangedSubject.next();
+        setTimeout(() => listChangedSubject.next(), 1000);
         return { responseCode: OK_RESPONSE_CODE };
     } catch (error) {
         console.log(error);

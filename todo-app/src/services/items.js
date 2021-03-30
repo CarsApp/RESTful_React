@@ -53,7 +53,9 @@ export async function createItem(ItemToCreate, listId) {
                 'Authorization': `Bearer ${localStorage.getItem('Authorization')}`
             }
         });
-        itemChangedSubject.next();
+
+        setTimeout(() => itemChangedSubject.next(), 1000);
+
         return { responseCode: OK_RESPONSE_CODE };
     } catch (error) {
         console.log(error);

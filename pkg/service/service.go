@@ -13,7 +13,7 @@ type Authorization interface {
 }
 
 type TodoList interface {
-	Create(userId int, list models.TodoList) (int, error)
+	Create(userId int, list models.TodoList) error
 	GetAll(userId int, limit, offset string) ([]models.TodoList, int, error)
 	GetById(userId, listId int) (models.TodoList, error)
 	Delete(userId, listId int) error
@@ -21,7 +21,7 @@ type TodoList interface {
 }
 
 type TodoItem interface {
-	Create(userId, listId int, item models.TodoItem) (int, error)
+	Create(userId, listId int, item models.TodoItem) error
 	GetAll(userId, listId int) ([]models.TodoItem, error)
 	GetById(userId, itemId int) (models.TodoItem, error)
 	Delete(userId, itemId int) error

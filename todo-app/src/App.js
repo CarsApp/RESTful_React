@@ -51,7 +51,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.isLoggedInChangedSubscriber = isLoggedInChanged.subscribe(isLoggedIn => this.setState({ isLoggedIn }));
-    this.registerSucessedSubscriber = registerSucessed.subscribe()
+    this.registerSucessedSubscriber = registerSucessed.subscribe(() => this.setState({ isDisplayRegisterSucessedAlert: true }))
   }
 
   componentWillUnmount() {

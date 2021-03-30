@@ -42,7 +42,6 @@ export async function signUp(name, username, password) {
     try {
         const response = await axios.post(baseUrl + 'sign-up', { name, username, password });
         const status = response.statusText;
-        console.log(response);
 
         responseCode = status === REGISTER_STATUS_OK ? OK_RESPONSE_CODE : AUTHENTICATION_ERROR_RESPONSE_CODE;
     } catch (error) {

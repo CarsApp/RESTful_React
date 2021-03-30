@@ -34,14 +34,13 @@ func (h *Handler) createList(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.TodoList.Create(userId, input)
-	if err != nil {
+	if err := h.services.TodoList.Create(userId, input); err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"id": id,
+		"status": "send_to_kafka",
 	})
 }
 

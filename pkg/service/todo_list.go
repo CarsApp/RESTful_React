@@ -15,9 +15,9 @@ func NewTodoListService(repo repository.TodoList, producer kafka.TodoList) *Todo
 	return &TodoListService{repo: repo, producer: producer}
 }
 
-func (s *TodoListService) Create(userId int, list models.TodoList) (int, error) {
+func (s *TodoListService) Create(userId int, list models.TodoList) error {
 	// return s.repo.Create(userId, list) // to postgres sql
-	return 0, s.producer.Create(userId, list) // to kafka
+	return s.producer.Create(userId, list) // to kafka
 }
 
 func (s *TodoListService) GetAll(userId int, limit, offset string) ([]models.TodoList, int, error) {
